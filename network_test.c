@@ -147,6 +147,25 @@ int main( int argc, char *argv[])
     float u[inputSize], l[inputSize];
     load_inputs(PROPERTY, inputSize, u, l);
 
+    printf("Lower Bounds: %.4e, %.4e\n", l[0],l[1]);
+    printf("Upper Bounds: %.4e, %.4e\n", u[0],u[1]);
+    float test_input[] = {u[0],u[1]};
+    float test_output[outputSize];
+    struct Matrix test_input_matrix = {test_input,1,nnet->inputSize};
+    printf("Test point: %.4e, %.4e\n",test_input_matrix.data[0], test_input_matrix.data[1]);
+
+    normalize_input(nnet, &test_input_matrix);
+    struct Matrix test_output_matrix = {test_output,1,nnet->inputSize};
+    evaluate(nnet, &test_input_matrix, &test_output_matrix);
+    printf("Test point scores: %.4e, %.4e, %.4e\n",test_output_matrix.data[0],test_output_matrix.data[1],test_output_matrix.data[2]);
+    int maxInd = 0;
+    for (int searchInd = 1; searchInd<outputSize; searchInd++) {
+        if (test_output_matrix.data[searchInd] > test_output_matrix.data[maxInd]) {
+            maxInd = searchInd;
+        }
+    }
+    printf("Highest Output Index: %d\n\n",maxInd);
+
     struct Matrix input_upper = {u,1,nnet->inputSize};
     struct Matrix input_lower = {l,1,nnet->inputSize};
 

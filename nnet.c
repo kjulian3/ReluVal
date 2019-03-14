@@ -13,7 +13,7 @@
 #include "nnet.h"
 
 
-int PROPERTY = 5;
+int PROPERTY = 2;
 char *LOG_FILE = "logs/log.txt";
 FILE *fp;
 
@@ -310,8 +310,8 @@ void load_inputs(int PROPERTY, int inputSize, float *u, float *l)
     }
 
     if (PROPERTY == 2) {
-        float upper[] = {60760,3.141592,3.141592, 1200, 60};
-        float lower[] = {55947.691,-3.141592,-3.141592,1145,0};
+        float upper[] = {-0.9665100671140939, -0.012};
+        float lower[] = {-0.9697986577181208, -0.0122};
         memcpy(u, upper, sizeof(float)*inputSize);
         memcpy(l, lower, sizeof(float)*inputSize);
     }

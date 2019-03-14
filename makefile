@@ -5,6 +5,7 @@ DEPS=matrix.h nnet.h split.h
 
 all: network_test 
 all: CFLAGS += -O3
+all: CFLAGS += -std=c99
 all: LDFLAGS += -O3
 
 debug: network_test
