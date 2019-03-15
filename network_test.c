@@ -147,30 +147,47 @@ int main( int argc, char *argv[])
     float u[inputSize], l[inputSize];
     load_inputs(PROPERTY, inputSize, u, l);
 
-    printf("==================================================\n");
+    printf("========================================================\n");
     printf("CHECK A POINT BEFORE BEGINNING RELUVAL\n");
-    printf("Target output index that cannot be maximal: %d\n",target);
+    printf("\nTarget output index that cannot be maximal: %d\n",target);
     printf("Input Region Upper Bounds: [%.6f %.6f]\n", u[0],u[1]);
     printf("Input Region Lower Bounds: [%.6f %.6f]\n", l[0],l[1]);
-    float test_input[] = {u[0],u[1]};
-    float test_output[outputSize];
+
+    // Define an input point within the region
+    float test_input[] = {u[0]*0.7 + l[0]*0.3, u[1]*0.7 + l[1]*0.3};
     struct Matrix test_input_matrix = {test_input,1,nnet->inputSize};
     printf("Test point: %.6f, %.6f\n",test_input_matrix.data[0], test_input_matrix.data[1]);
-
+    
+    // Normalize the input
     normalize_input(nnet, &test_input_matrix);
+
+    // Evaluate the network
+    float test_output[outputSize];
     struct Matrix test_output_matrix = {test_output,1,nnet->inputSize};
     evaluate(nnet, &test_input_matrix, &test_output_matrix);
-    printf("Test point scores: [%.6f %.6f %.6f]\n",test_output_matrix.data[0] - test_output_matrix.data[target],test_output_matrix.data[1] - test_output_matrix.data[target],test_output_matrix.data[2] - test_output_matrix.data[target]);
+
+    // Reluval subtracts the target's output from all outputs, so we'll do the same
+    float targetOutput = test_output_matrix.data[target];
+    test_output_matrix.data[0] -= targetOutput;
+    test_output_matrix.data[1] -= targetOutput;
+    test_output_matrix.data[2] -= targetOutput;
+    printf("Test point output values: [%.6f %.6f %.6f]\n",test_output_matrix.data[0],test_output_matrix.data[1],test_output_matrix.data[2]);
+    
+    // Find the output index with the highest value
     int maxInd = 0;
     for (int searchInd = 1; searchInd<outputSize; searchInd++) {
         if (test_output_matrix.data[searchInd] > test_output_matrix.data[maxInd]) {
             maxInd = searchInd;
         }
     }
+
+    // Print if we found a counterexample.
+    // For property 2, a counterexample is found when the target output has the highest value
     printf("Highest Output Index: %d\n",maxInd);
+    printf("\nFor Property 2, a counterexample occurs when the\ntarget output has the highest value.\n");
     char *isSat = (maxInd==target) ? ("Yes") : ("No");
-    printf("Is this point a counterexample for property 2? %s\n",isSat);
-    printf("==================================================\n\n");
+    printf("Is this point a counterexample for Property 2? %s\n",isSat);
+    printf("========================================================\n\n");
 
     struct Matrix input_upper = {u,1,nnet->inputSize};
     struct Matrix input_lower = {l,1,nnet->inputSize};
