@@ -310,8 +310,8 @@ void load_inputs(int PROPERTY, int inputSize, float *u, float *l)
     }
 
     if (PROPERTY == 2) {
-        float upper[] = {-613.157898, -36.5, 0.5};
-        float lower[] = {-638.947388, -40.0, 0.0};
+        float upper[] = {-613.157898, -36.5, 0.51};
+        float lower[] = {-638.947388, -40.0, 0.01};
         memcpy(u, upper, sizeof(float)*inputSize);
         memcpy(l, lower, sizeof(float)*inputSize);
     }

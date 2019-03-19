@@ -12,7 +12,7 @@
 #include "split.h"
 
 #define AVG_WINDOW 5
-#define MAX_THREAD 56
+#define MAX_THREAD 2
 #define MIN_DEPTH_PER_THREAD 5 
 
 int NEED_PRINT = 0;
