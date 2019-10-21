@@ -13,7 +13,7 @@
 #include "nnet.h"
 
 
-int PROPERTY = 5;
+int PROPERTY = 1;
 char *LOG_FILE = "logs/log.txt";
 FILE *fp;
 
@@ -33,7 +33,7 @@ struct NNet *load_network(const char* filename, int target)
         exit(1);
     }
 
-    int bufferSize = 10240;
+    int bufferSize = 102400;
     char *buffer = (char*)malloc(sizeof(char)*bufferSize);
     char *record, *line;
     int i=0, layer=0, row=0, j=0, param=0;
@@ -126,8 +126,6 @@ struct NNet *load_network(const char* filename, int target)
     i=0;
     j=0;
 
-    char *tmpptr=NULL;
-
     float w = 0.0;
 
     while ((line = fgets(buffer,bufferSize,fstream)) != NULL) {
@@ -146,16 +144,13 @@ struct NNet *load_network(const char* filename, int target)
             j=0;
         }
 
-        record = strtok_r(line,",\n", &tmpptr);
-
+        record = strtok(line,",\n");
         while (record != NULL) {   
             w = (float)atof(record);
             nnet->matrix[layer][param][i][j] = w;
             j++;
-            record = strtok_r(NULL, ",\n", &tmpptr);
+            record = strtok(NULL, ",\n");
         }
-
-        tmpptr=NULL;
         j=0;
         i++;
     }

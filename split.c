@@ -46,7 +46,7 @@ struct timeval start,finish,last_finish;
  */
 int check_max_constant(struct NNet *nnet, struct Interval *output)
 {
-    if (output->upper_matrix.data[nnet->target] > 0.5011) {
+    if (output->lower_matrix.data[nnet->target] < 0.0) {
         return 1;
     }
     else {
@@ -177,7 +177,7 @@ int check_min1_p7(struct NNet *nnet, struct Matrix *output)
 int check_max_constant1(struct NNet *nnet, struct Matrix *output)
 {
 
-    if (output->data[nnet->target] < 0.5011) {
+    if (output->data[nnet->target] > 0.0) {
         return 0;
     }
 
